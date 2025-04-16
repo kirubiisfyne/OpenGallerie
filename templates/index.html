@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>OpenGallerie; Login</title>
+{% endblock %}
+
+{% block body %}
+<div>
+    <div><h2>Login</h2></div>
+    <div>
+        <input type="text" placeholder="Username" name="username" required>
+        <input type="password" placeholder="Password" name="password" required>
+    </div>
+    <div><button>Login</button></div>
+    <div>Don't have an account yet? <a href="">Make one here.</a></div>
+</div>
+{% endblock %}
