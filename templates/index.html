@@ -8,10 +8,14 @@
 <div>
     <div><h2>Login</h2></div>
     <div>
-        <input type="text" placeholder="Username" name="username" required>
-        <input type="password" placeholder="Password" name="password" required>
+        <form action="/" method="POST">
+            <input type="text" placeholder="Username" name="username" required id="username">
+            <input type="text" placeholder="Email" name="email" required id="email">
+            <input type="password" placeholder="Password" name="password" required id="password">
+
+            <button type="submit">Login</button>
+        </form>
     </div>
-    <div><button>Login</button></div>
     <div>Don't have an account yet? <a href="">Make one here.</a></div>
 </div>
 {% endblock %}
