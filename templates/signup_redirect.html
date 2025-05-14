@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>OpenGallerie; Sign Up</title>
+{% endblock %}
+
+{% block body %}
+<div> 
+    User not found. Please check your email and try again.
+
+    Or make an account <a href="{{ url_for('signup') }}">here</a>.
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>OpenGallerie; Login</title>
+{% endblock %}
+
+{% block body %}
+<div>
+    <div><h2>Login</h2></div>
+
+    {% if error %}
+    <script> alert("{{ error }}")</script>
+    {% endif %}
+
+    <div>
+        <form action="/" method="POST">
+            <input type="text" placeholder="Username" name="username" required id="username">
+            <input type="password" placeholder="Password" name="password" required id="password">
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <div>Don't have an account yet? <a href="{{ url_for('signup') }}">Make one here.</a></div>
+    <div></div>
+</div>
+{% endblock %}

@@ -8,5 +8,11 @@
 {% block body %}
 <div>
     <h1>{{ user.username }}'s Gallery</h1>
+    <p>User's id: {{ user.id }}</p>
+
+    <form action="/open_gallery" method="POST">
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <button type="submit">Delete Account</button>
+    </form>
 </div>
 {% endblock %}
