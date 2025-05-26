@@ -5,22 +5,38 @@
 {% endblock %}
 
 {% block body %}
-<div>
-    <div><h2>Login</h2></div>
+<header>
+<div class="logo">
+    🎨 <span>The Open Gallerie</span>
+  </div>
+  <nav>
+    <a href="#" class="active">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Gallery</a>
+  </nav>
+</header>
 
-    {% if error %}
-    <script> alert("{{ error }}")</script>
-    {% endif %}
-
-    <div>
-        <form action="/" method="POST">
-            <input type="text" placeholder="Username" name="username" required id="username">
-            <input type="password" placeholder="Password" name="password" required id="password">
-
-            <button type="submit">Login</button>
-        </form>
-    </div>
-    <div>Don't have an account yet? <a href="{{ url_for('signup') }}">Make one here.</a></div>
-    <div></div>
+<main>
+  <div class="form-container">
+    <h1>New here? Let’s get you started!</h1>
+    <p class="subtext">Create Your Profile.</p>
+    <form>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+      
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      
+        <div><button type="submit">Log in</button></div>
+        <div class="ask-account">
+          Don't have an account yet? <a href="{{ url_for('signup') }}">Make one here.</a>
+        </div>
+      </form>
+  </div>
+  <div class="image-container">
+    <img id='home-image', src="static\assets\depositphotos_108229416-stock-illustration-couple-walking-on-harbor-pier.webp" />
+    <mask id= 'mask'>
+  </div>
 </div>
+
 {% endblock %}
