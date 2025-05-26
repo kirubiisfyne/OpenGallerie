@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>OpenGallerie; Upload Image</title>
+{% endblock %}
+
+
+{% block body %}
+<div>
+    <form action="/upload_image" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="user_id" id="user_id_input">
+
+        <input type="file" name="image" accept="image/*" required onchange="previewImage(event)">
+        <br>
+        <input type="text" name="filename" id="filename" placeholder="Enter a title" required>
+        <br>
+        <input type="text" name="description" id="description" placeholder="Enter a description" required>
+        <br>
+        <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 300px; display: none;">
+        <br>
+        <input type="submit" value="Upload an Image">
+    </form>
+
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            } else {
+                preview.src = '#';
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul>
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

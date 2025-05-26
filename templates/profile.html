@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>OpenGallerie; Profile</title>
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>{{ user.username }}'s Profile</h1>
+
+    <button onclick="window.location.href='/upload_image'">Upload new Image</button>
+
+    <form action="/delete_account" method="POST">
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <button type="submit">Delete Account</button>
+    </form>
+</div>
+ 
+<div>
+    <h2>Uploaded Images</h2>
+    {% for image in images %}
+        <div>
+            <img src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" width="300">
+            <p>{{ image.image_description}}</p>
+            <p>Uploaded on: {{ image.date_uploaded.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <form action="/delete_image" method="POST">
+                <input type="hidden" name="image_filename" value="{{ image.image_filename }}">
+                <button type="submit">Delete Image</button>
+            </form>
+        </div>
+        {% else %}
+            <p>No images uploaded yet.</p>
+        {% endfor%}
+    {% endblock %}
+</div>
