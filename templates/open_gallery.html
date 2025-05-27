@@ -22,7 +22,8 @@
         <h2>Feed</h2>
         <div>
             {% for image in images %}
-                <img src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" width="300">
+                <img onclick="openImage(this)" src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" width="300">
+                <p>{{ image.image_filename }}</p>
                 <p>{{ image.image_description }}</p>
                 <p>Uploaded on: {{ image.date_uploaded.strftime('%Y-%m-%d %H:%M:%S') }}</p>
             {% else %}

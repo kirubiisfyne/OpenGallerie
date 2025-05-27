@@ -19,7 +19,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
     
     portfolio = db.relationship('Portfolio', back_populates='user', lazy=True, uselist=False)
 class Portfolio(db.Model):
@@ -51,10 +50,13 @@ def login():
         user = User.query.filter_by(username=username).first() # Query the database for the user
         
         if user: # Checks if the user exists
-            session['user_id'] = user.id
-            return redirect(url_for('open_gallery', user=user))
+            if user.password == password:
+                session['user_id'] = user.id
+                return redirect(url_for('open_gallery', user=user))
+            else:
+                return render_template('login.html', error="Incorrect password")
         else:
-            return redirect(url_for('signup_redirect', error="User not found"))
+            return render_template('signup_redirect.html', error="User does not exist")
     else:
         return render_template('login.html')
 
@@ -62,10 +64,9 @@ def login():
 def signup():
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['email']
         password = request.form['password']
 
-        new_user = User(username=username, email=email, password=password)
+        new_user = User(username=username, password=password)
         try:
             user = User.query.filter_by(username=username).first() # Query the database for the user
             if user: # Checks if the user exists
