@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<div id='redirect_message'> 
-    User not found. Please check your email and try again.
+<div id='redirect_message'>
+    <h1>User not found. Please check your email and try again. ;(</h1>
 
-    Or make an account <a href="{{ url_for('signup') }}">here</a>.
+    <p>Or make an account <a href="{{ url_for('signup') }}">here</a>.</p>
 </div>
 {% endblock %}

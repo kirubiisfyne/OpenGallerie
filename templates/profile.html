@@ -5,31 +5,118 @@
 {% endblock %}
 
 {% block body %}
-<div>
+<header>
+  <div class="logo">
+    🎨 <span>The Open Gallerie</span>
+  </div>
+  <nav>
+    <a href="{{ url_for('open_gallery') }}" class="active">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Gallery</a>
+  </nav>
+</header>
+
+<div style="display: flex; justify-content: start; align-items: start; margin: 1vh 2vw;">
+<div id="profile-container">
     <h1>{{ user.username }}'s Profile</h1>
-
-    <button onclick="window.location.href='/upload_image'">Upload new Image</button>
-
-    <form action="/delete_account" method="POST">
+    <button onclick="window.location.href='/upload_image'">Upload Image</button>
+    <form style="align-content: end;" action="/delete_account" method="POST">
         <input type="hidden" name="user_id" value="{{ user.id }}">
         <button type="submit">Delete Account</button>
     </form>
 </div>
  
-<div>
-    <h2>Uploaded Images</h2>
-    {% for image in images %}
-        <div>
-            <img src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" width="300">
-            <p>{{ image.image_description}}</p>
-            <p>Uploaded on: {{ image.date_uploaded.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-            <form action="/delete_image" method="POST">
-                <input type="hidden" name="image_filename" value="{{ image.image_filename }}">
-                <button type="submit">Delete Image</button>
-            </form>
+    <div id="portfolio-container">
+        <h1 style="margin-bottom: 1vh; margin-top: 0;">Portfolio</h1>
+        <div id="portfolio">
+            {% for image in images %}
+                <div onclick="openImage(this)" id="profileModalFrame" class="image-container-profile"
+                        data-src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}"
+                        data-filename="{{ image.image_filename }}"
+                        data-description="{{ image.image_description }}">
+                        
+                    <img src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" width="300">
+                    <h1>{{ image.image_description }}</h1>
+                    <p>Uploaded on: {{ image.date_uploaded.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                </div>
+                {% else %}
+                    <p>No images uploaded yet.</p>
+                {% endfor%}
+            </div>
         </div>
-        {% else %}
-            <p>No images uploaded yet.</p>
-        {% endfor%}
-    {% endblock %}
+    </div>
+
+<div id="modalFrame" class="modal">
+    <img id="modalImage" onclick="closeImage()">
+    <div>
+        <form id="editForm" action="/edit_image_info" method="POST">
+            <input type="hidden" name="image_filename" id="image_filename">
+            <input type="hidden" name="image_title" id="image_title">
+            <input type="hidden" name="image_description" id="image_description">
+            
+            <h3 ondblclick="editField(this)" data-field="title" id="modalTitle" name="title"></h3>
+            <p ondblclick="editField(this)" data-field="description" id="modalDesc" name="description"></p>
+        </form>
+    </div>
 </div>
+
+<script>
+    function editField(element) {
+        const currentText = element.textContent;
+        const field = element.dataset.field;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+        input.style.width = '100%';
+
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Optional: prevent form submission or newline
+                saveEdit(input, element, field);
+            }
+        });
+        element.replaceWith(input);
+        input.focus();
+}
+
+    function saveEdit(input, oldElement, field) {
+        const newText = input.value;
+        if (!newText) return;
+
+        const newElement = oldElement.cloneNode(false);
+        newElement.textContent = newText;
+        newElement.ondblclick = () => editField(newElement);
+        input.replaceWith(newElement);
+
+        if (field === 'title') {
+            document.getElementById('modalTitle').value = newText;
+            document.getElementById('image_title').value = newText;
+        } else {
+            document.getElementById('modalDesc').value = newText;
+            document.getElementById('image_description').value = newText;
+        }
+        document.getElementById('editForm').submit();
+    }
+
+    function openImage(imgElement) {
+        const modal = document.getElementById('modalFrame');
+        modal.style.display = 'flex';
+
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imgElement.dataset.src;
+
+        document.getElementById('modalTitle').innerText = imgElement.dataset.filename;
+        document.getElementById('modalDesc').innerText = imgElement.dataset.description;
+
+        document.getElementById('image_filename').value = imgElement.dataset.filename;
+    document.getElementById('image_title').value = imgElement.dataset.filename;
+    document.getElementById('image_description').value = imgElement.dataset.description;
+    }
+
+    function closeImage() {
+        document.getElementById('modalFrame').style.display = 'none';
+    }
+</script>
+{% endblock %}
+

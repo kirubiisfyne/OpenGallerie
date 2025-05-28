@@ -6,31 +6,65 @@
 
 
 {% block body %}
-<div>
-    <h1>{{ user.username }}'s Gallery</h1>
-    <p>User's id: {{ user.id }}</p>
+<header>
+  <div class="logo">
+    🎨 <span>The Open Gallerie</span>
+  </div>
+  <nav>
+    <a href="{{ url_for('open_gallery') }}" class="active">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Gallery</a>
+  </nav>
+</header>
 
+<div>
     <div><button onclick="window.location.href='/upload_image'">Upload Image</button></div>
     <div><button onclick="window.location.href='/display_profile'">View Profile</button></div>
 
-    <form action="/delete_account" method="POST">
-        <input type="hidden" name="user_id" value="{{ user.id }}">
-        <button type="submit">Delete Account</button>
-    </form>
-
     <div>
         <h2>Feed</h2>
-        <div>
+        <div    >
             {% for image in images %}
-                <img onclick="openImage(this)" src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" width="300">
+                <img 
+                id="imageModal"
+                onclick="openImage(this)" 
+                src="{{ url_for('static', filename='uploads/' ~ image.image_filename) }}" 
+                data-filename="{{ image.image_filename }}"
+                data-description="{{ image.image_description }}"
+                width="300">
+
                 <p>{{ image.image_filename }}</p>
                 <p>{{ image.image_description }}</p>
                 <p>Uploaded on: {{ image.date_uploaded.strftime('%Y-%m-%d %H:%M:%S') }}</p>
             {% else %}
-                {{image.image_filename}}
                 <p>No images uploaded yet.</p>
             {% endfor %}
         </div>
     </div>
+
+    <div class="modal" id="modalFrame">
+        <img onclick="closeImage()" id="modalImage">
+        <div>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDesc"></p>
+        </div>
+    </div>
 </div>
+
+<script>
+    function openImage(imgElement) {
+        const modal = document.getElementById('modalFrame');
+        modal.style.display = 'flex';
+
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imgElement.src;
+
+        document.getElementById('modalTitle').innerText = imgElement.dataset.filename;
+        document.getElementById('modalDesc').innerText = imgElement.dataset.description;
+    }
+
+    function closeImage() {
+        document.getElementById('modalFrame').style.display = 'none';
+    }
+</script>
 {% endblock %}

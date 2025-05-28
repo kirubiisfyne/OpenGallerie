@@ -47,16 +47,17 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        user = User.query.filter_by(username=username).first() # Query the database for the user
+        user = User.query.filter_by(username=username).first()
         
-        if user: # Checks if the user exists
+        if user:
             if user.password == password:
                 session['user_id'] = user.id
                 return redirect(url_for('open_gallery', user=user))
             else:
-                return render_template('login.html', error="Incorrect password")
+                flash("Incorrect password", 'error')
+                return render_template('login.html')
         else:
-            return render_template('signup_redirect.html', error="User does not exist")
+            return render_template('signup_redirect.html')
     else:
         return render_template('login.html')
 
@@ -70,7 +71,8 @@ def signup():
         try:
             user = User.query.filter_by(username=username).first() # Query the database for the user
             if user: # Checks if the user exists
-                return render_template('signup.html', error="User already exists")
+                flash("User already exists", 'error')
+                return render_template('signup.html')
             else:
                 db.session.add(new_user)
                 db.session.commit()
@@ -83,8 +85,8 @@ def signup():
 
                 return redirect(url_for('open_gallery', user=new_user))
         except Exception as e:
-            print(f"Error creating user: {e}")
-            return render_template('signup.html', error="Error creating user")
+            flash("Error creating user", 'error')
+            return render_template('signup.html')
     else:
         return render_template('signup.html')
 
@@ -109,7 +111,8 @@ def delete_account():
             db.session.commit()
             return render_template('login.html', message="Account deleted successfully")
         else:
-            return redirect(url_for('open_gallery', error="User not found"))
+            flash("User not found")
+            return redirect(url_for('open_gallery'))
     else:
         return redirect(url_for('open_gallery'))
 
@@ -174,6 +177,32 @@ def delete_image():
             db.session.commit()
             flash('Image deleted successfully', 'success')
         else:
+            flash('Image not found', 'error')
+    return redirect(url_for('display_profile'))
+
+@app.route('/edit_image_info', methods=['POST', 'GET'])
+def edit_image_info():
+    if request.method == 'POST':
+        image_filename = request.form.get('image_filename')
+        new_title = request.form.get('image_title')
+        new_description = request.form.get('image_description')
+        print(image_filename, new_title, new_description)
+        image = Image.query.filter_by(image_filename=image_filename).first()
+        if image:
+            if new_title:
+                image.image_filename = new_title
+                os.rename(
+                    os.path.join('static/uploads', image_filename),
+                    os.path.join('static/uploads', new_title)
+                )
+            if new_description:
+                image.image_description = new_description
+
+            db.session.commit()
+            print("Image information updated successfully")
+            flash('Image information updated successfully', 'success')
+        else:
+            print("Image not found in the database")
             flash('Image not found', 'error')
     return redirect(url_for('display_profile'))
 

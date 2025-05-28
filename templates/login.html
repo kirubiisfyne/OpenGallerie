@@ -6,7 +6,7 @@
 
 {% block body %}
 <header>
-<div class="logo">
+  <div class="logo">
     🎨 <span>The Open Gallerie</span>
   </div>
   <nav>
@@ -17,10 +17,10 @@
 </header>
 
 <main>
-  <div class="form-container">
-    <h1>New here? Let’s get you started!</h1>
-    <p class="subtext">Create Your Profile.</p>
-    <form>
+   <div class="form-container">
+    <h1>Welcome Back!</h1>
+    <p class="subtext">Please Log-in here.</p>
+    <form action="/", method="POST">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required />
       
@@ -29,14 +29,18 @@
       
         <div><button type="submit">Log in</button></div>
         <div class="ask-account">
+          <br>
           Don't have an account yet? <a href="{{ url_for('signup') }}">Make one here.</a>
         </div>
       </form>
-  </div>
-  <div class="image-container">
-    <img id='home-image', src="static\assets\depositphotos_108229416-stock-illustration-couple-walking-on-harbor-pier.webp" />
-    <mask id= 'mask'>
-  </div>
-</div>
+  </div>  
+</main>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <script>
+      alert("{{ message }}");
+    </script>
+  {% endfor %}
+{% endwith %}
 {% endblock %}

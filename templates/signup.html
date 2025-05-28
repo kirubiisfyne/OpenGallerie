@@ -5,20 +5,42 @@
 {% endblock %}
 
 {% block body %}
+<header>
+  <div class="logo">
+    🎨 <span>The Open Gallerie</span>
+  </div>
+  <nav>
+    <a href="#" class="active">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Gallery</a>
+  </nav>
+</header>
+
 <div>
-    <div><h2>Sign Up</h2></div>
-    <div>
-        <form action="/signup" method="POST">
-            <input type="text" placeholder="Username" name="username" required id="username">
-            <input type="password" placeholder="Password" name="password" required id="password">
-
-            <button type="submit">Sign Up</button>
-        </form>
-
-        {% if error %}
-        <p style="color:red">{{ error }}</p>
-        {% endif %}
-    </div>
-    <div>Already have an account? <a href="{{ url_for('login') }}">Login here.</a></div>
+    <main>
+        <div class="form-container">
+            <h1>New here? <br> Let's get you started!</h1>
+            <p class="subtext">Create your profile.</p>
+            <form action="/signup" method="POST">
+                <label for="username">Username</label>
+                <input type="text" placeholder="Username" name="username" required id="username">
+                
+                <label for="password">Password</label>
+                <input type="password" placeholder="Password" name="password" required id="password">
+    
+                <div><button type="submit">Sign Up</button></div>
+                <br>
+                <div>Already have an account? <a href="{{ url_for('login') }}">Login here.</a></div>
+            </form>
+        </div>
+    </main>
 </div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <script>
+      alert("{{ message }}");
+    </script>
+  {% endfor %}
+{% endwith %}
 {% endblock %}
